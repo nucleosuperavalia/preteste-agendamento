@@ -367,7 +367,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
    CONFIG — preencha para sair do modo demonstração
    ========================================================================== */
 const CONFIG = {
-  API_URL:    'https://script.google.com/macros/s/AKfycbzTZFZUc13PRdw0sOnimyDolEEmFY6Z9pFMgMs3GN3hhvzip2Wuny-9RvrJKgSEmqXH/exec',   // URL do app da web do Apps Script (termina em /exec)
+  API_URL:    'https://script.google.com/macros/s/AKfycbz3bd1VytdopAgjExMM-jBo7PXWb1iSpGBQTyZ38-A4TFoWtFnAwaR4NRIBSoHGG0wE2g/exec',   // URL do app da web do Apps Script (termina em /exec)
   MANUAL_URL: 'https://drive.google.com/file/d/1JhdH79wOALQH29HfM6JuprGON6b22T_b/view?usp=sharing',   // link do manual em PDF
   PROVA_URL:  'https://prova.sesisp.org.br/e/',
   // ---- trava de publicação -------------------------------------------------
@@ -441,8 +441,30 @@ const S={unidade:null,turmas:[],picking:null,draft:null,confirmado:false,gravand
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
 const LS=u=>'preteste2026:'+u;
-const toMin=h=>{const p=h.split(':');return (+p[0])*60+(+p[1]);};
+/** Aceita '08:10', um ISO vindo da planilha ou um objeto de data e devolve
+    sempre 'HH:MM'. Protege contra células de horário salvas como data. */
+function normHora(v){
+  if(v==null||v==='')return null;
+  if(v instanceof Date) return String(v.getHours()).padStart(2,'0')+':'+String(v.getMinutes()).padStart(2,'0');
+  const s=String(v);
+  const iso=s.match(/T(\d{2}):(\d{2})/);          // '1899-12-30T08:10:00.000Z'
+  const m=iso||s.match(/(\d{1,2}):(\d{2})/);
+  if(!m)return null;
+  let h=+m[1],mi=+m[2];
+  // valor que veio como data traz o desvio do fuso antigo, sempre para mais:
+  // nesses casos arredonda para baixo, no múltiplo de 5 minutos.
+  if(iso||/1899|GMT|\dT\d/.test(s)) mi=Math.floor(mi/5)*5;
+  return String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');
+}
+const toMin=h=>{const p=String(h).split(':');const v=(+p[0])*60+(+p[1]);return Number.isFinite(v)?v:0;};
 const toHora=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
+function sanear(ts){
+  return (ts||[]).map(t=>{
+    const hora=normHora(t.hora);
+    const dia=Number(t.dia)||null;
+    return Object.assign({},t,{hora:hora,dia:(hora&&dia)?dia:null});
+  });
+}
 const salvar=()=>{try{localStorage.setItem(LS(S.unidade),JSON.stringify({turmas:S.turmas,confirmado:S.confirmado}));}catch(e){}};
 const encaixa=m=>Math.max(T0,Math.min(T1-DUR,Math.round(m/SNAP)*SNAP));
 
@@ -477,7 +499,7 @@ async function entrar(){
   const u=$('#selUnit').value;
   try{
     const r=await api.entrar(u);
-    S.unidade=u;S.turmas=r.turmas;S.confirmado=!!r.confirmado;
+    S.unidade=u;S.turmas=sanear(r.turmas);S.confirmado=!!r.confirmado;
     if(!LIVE){const sv=JSON.parse(localStorage.getItem(LS(u))||'null');
       if(sv){S.turmas=sv.turmas;S.confirmado=sv.confirmado;}}
     localStorage.setItem('preteste2026:ultima',u);
@@ -493,7 +515,7 @@ async function recarregar(){
   if(!S.unidade)return;
   try{
     const r=await api.entrar(S.unidade);
-    S.turmas=r.turmas;S.confirmado=!!r.confirmado;
+    S.turmas=sanear(r.turmas);S.confirmado=!!r.confirmado;
     cancelarPick();
     toast('Agenda atualizada');
   }catch(e){toast('Não foi possível atualizar: '+e.message);}
@@ -501,7 +523,7 @@ async function recarregar(){
 
 /* ---------- render ---------- */
 function render(){desenhaTimeline();desenhaTurmas();desenhaProgresso();salvar();}
-const agendadas=dia=>S.turmas.filter(t=>t.dia===dia&&t.hora).sort((a,b)=>toMin(a.hora)-toMin(b.hora));
+const agendadas=dia=>S.turmas.filter(t=>t.dia===dia&&normHora(t.hora)).sort((a,b)=>toMin(a.hora)-toMin(b.hora));
 const sobrepoe=(a,b)=>{const x=toMin(a),y=toMin(b);return x<y+DUR&&y<x+DUR;};
 const conflitos=(dia,hora,ig)=>S.turmas.filter(t=>t.dia===dia&&t.hora&&t.id!==ig&&sobrepoe(t.hora,hora)).length;
 
