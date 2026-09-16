@@ -98,13 +98,10 @@ section{margin-top:26px}
   font-family:'Archivo Narrow','Archivo',sans-serif;font-size:13px;font-weight:700;white-space:nowrap}
 .tl .hcell:last-child{border-right:none}
 .tl .hcell .dsub{display:block;font-weight:500;font-size:11.5px;color:var(--ink3)}
-.tl .hcell.wave{box-shadow:inset 0 -3px 0 var(--wave)}
-.tl .hcell.wave .dsub{color:var(--wave)}
 .axis{position:relative;background:var(--surface2);border-right:1px solid var(--line2)}
 .axis .mark{position:absolute;right:8px;transform:translateY(-50%);font-size:11.5px;color:var(--ink3);font-weight:600}
 .col{position:relative;border-right:1px solid var(--line2)}
 .col:last-child{border-right:none}
-.col.wave{background-color:var(--wave-bg)}
 .rule{position:absolute;left:0;right:0;border-top:1px solid var(--line2);pointer-events:none}
 .rule.half{border-top-style:dotted}
 .ev{position:absolute;border-radius:3px;background:var(--ok-bg);border:1px solid var(--ok-bd);border-left:3px solid var(--ok);
@@ -251,7 +248,6 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
     <label for="selUnit">Unidade</label>
     <select id="selUnit"></select>
     <button class="btn" id="btnEnter" style="width:100%">Entrar</button>
-    <p style="margin:16px 0 0;font-size:12.5px;color:var(--ink3)">Mais de uma pessoa pode agendar ao mesmo tempo. Se alguém da sua unidade marcar um horário enquanto você estiver aqui, o sistema avisa antes de gravar por cima.</p>
   </div>
 </div>
 
@@ -275,13 +271,13 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 <div class="wrap">
 
   <section class="panel">
-    <div class="phead"><h2>O que a sua unidade precisa fazer</h2><span class="sub">leitura de dois minutos</span></div>
+    <div class="phead"><h2>O que a sua unidade precisa fazer</h2></div>
     <div class="intro">
       <div class="txt">
         <p><b>O que está sendo testado é o item, não o estudante.</b> O pré-teste serve para descobrir, antes da prova de novembro, quais itens são claros e válidos e quais têm problema de gabarito, de enunciado ou de distrator. Não vale nota e não haverá divulgação de resultados.</p>
         <p>A aplicação é online, no laboratório ou com notebooks. Cada estudante faz <b>um único caderno</b>, ou de Língua Portuguesa, ou de Matemática. Dentro da turma, o sistema divide a metade de cada componente sozinho: a unidade não precisa separar ninguém.</p>
-        <p>Reserve <b>até 3 horas</b> por turma, que é a duração máxima prevista. A maioria termina bem antes, mas a agenda trabalha com o tempo cheio para não atropelar a turma seguinte. Se houver mais de um laboratório, dá para colocar turmas em paralelo — informe quantos no quadro da agenda.</p>
-        <p><b>Por que o dia importa.</b> Todas as unidades da rede aplicam o mesmo ano escolar no mesmo dia. Isso evita que o conteúdo dos itens circule entre turmas antes da aplicação. Agende fora do dia previsto só quando não houver alternativa.</p>
+        <p>Reserve <b>até 3 horas</b> por turma, que é a duração máxima prevista. A maioria termina bem antes, mas a agenda trabalha com o tempo cheio para não atropelar a turma seguinte. Se a unidade tiver espaço para isso, pode marcar mais de uma turma no mesmo horário: elas aparecem lado a lado na agenda.</p>
+        <p><b>Sobre o dia sugerido.</b> Cada ano escolar tem um dia sugerido na semana, o mesmo para toda a rede, o que ajuda a manter o conteúdo dos itens em circulação pelo menor tempo possível. É só uma sugestão: monte a semana da forma que funcionar para a sua unidade.</p>
       </div>
       <div class="aside">
         <div class="fact"><b>até 3 h</b>tempo reservado por turma no laboratório</div>
@@ -318,34 +314,28 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
     <div class="phead">
       <h2>Agenda da semana</h2>
       <span class="sub" id="gridHint">Clique em “Agendar” numa turma, ou arraste uma turma já marcada para mudar de horário</span>
-      <div class="right">
-        <span class="tmeta">Laboratórios</span>
-        <span class="stepper"><button id="labMinus" aria-label="Menos um laboratório">−</button><span id="labN">1</span><button id="labPlus" aria-label="Mais um laboratório">+</button></span>
-      </div>
     </div>
     <div class="tlwrap"><div class="tl" id="tl"></div></div>
     <div class="legend">
-      <span><i style="background:var(--ok-bg);border:1px solid var(--ok)"></i>no dia previsto</span>
-      <span><i style="background:var(--wait-bg);border:1px solid var(--wait)"></i>fora do dia previsto</span>
       <span>Arraste uma turma para mudar o horário, ou clique nela para desmarcar.</span>
     </div>
   </section>
 
   <section class="panel">
-    <div class="phead"><h2>Turmas</h2><span class="sub">a lista de presença sai em PDF assim que a turma tem horário</span></div>
+    <div class="phead"><h2>Turmas</h2><span class="sub">agende o horário de cada uma das suas turmas</span></div>
     <div class="pbody" style="padding:14px 6px">
       <table class="turmas"><thead><tr>
-        <th style="padding-left:12px">Turma</th><th>Dia previsto</th><th>Agendamento</th><th></th>
+        <th style="padding-left:12px">Turma</th><th>Dia sugerido</th><th>Agendamento</th><th></th>
       </tr></thead><tbody id="tbody"></tbody></table>
     </div>
   </section>
 
   <section class="panel">
-    <div class="phead"><h2>Listas de presença</h2><span class="sub">uma folha por turma, com o link individual de acesso</span></div>
+    <div class="phead"><h2>Listas de presença</h2><span class="sub">em breve</span></div>
     <div class="pbody">
-      <div class="note info"><b>Entregue o link individual só no dia da sessão.</b> Cada link abre um formulário onde o estudante faz login com o e-mail educacional, acessa os itens e registra as respostas. A ordem da folha é a ordem em que os estudantes sentam nas máquinas.</div>
+      <div class="note warn"><b>A lista para download estará disponível em breve.</b> Assim que for liberada, cada turma agendada terá uma folha em PDF com os nomes, a ordem de chamada, o componente de cada estudante, o campo de presença e o link individual de acesso. Você receberá um aviso quando isso acontecer.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <button class="btn ghost" id="btnAll">Baixar o PDF de todas as turmas agendadas</button>
+        <button class="btn ghost" id="btnAll" disabled>Baixar o PDF de todas as turmas</button>
         <span class="tmeta" id="allHint"></span>
       </div>
     </div>
@@ -378,12 +368,12 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
    ========================================================================== */
 const CONFIG = {
   API_URL:    'https://script.google.com/macros/s/AKfycbzjICY63XCL9WxlH-gTvVYtvkRRPHgTJI-dugQyExkpsy65rB9WFf21A6YBdwFo0dDe/exec',   // URL do app da web do Apps Script (termina em /exec)
-  MANUAL_URL: '',   // link do manual em PDF
+  MANUAL_URL: 'https://drive.google.com/file/d/1JhdH79wOALQH29HfM6JuprGON6b22T_b/view?usp=sharing',   // link do manual em PDF
   PROVA_URL:  'https://prova.sesisp.org.br/e/',
   // ---- trava de publicação -------------------------------------------------
   // false  = a página mostra o aviso de "em breve" e ninguém agenda.
   // true   = o agendamento abre. Mude só esta linha quando quiser liberar.
-  AGENDAMENTO_LIBERADO: false,
+  AGENDAMENTO_LIBERADO: true,
   PREVISAO: '',   // opcional: texto de previsão, ex.: 'a partir de 1.º de setembro'. Vazio = só "em breve".
   // --------------------------------------------------------------------------
   DURACAO:    180,  // minutos reservados por turma (o manual prevê até 3 horas)
@@ -407,9 +397,9 @@ const T1=(+CONFIG.FECHAMENTO.split(':')[0])*60+(+CONFIG.FECHAMENTO.split(':')[1]
 const PXMIN=0.62, SNAP=5;
 
 const DEMO={
-"CE 355 - Jundiaí":[{ano:"3EF",turma:"A",n:31},{ano:"4EF",turma:"A",n:32},{ano:"4EF",turma:"B",n:31},{ano:"5EF",turma:"A",n:32},{ano:"5EF",turma:"B",n:32}],
-"CE 341 - Sumaré":[{ano:"3EF",turma:"A",n:29},{ano:"4EF",turma:"A",n:28},{ano:"4EF",turma:"B",n:30},{ano:"5EF",turma:"A",n:31},{ano:"6EF",turma:"A",n:30},{ano:"7EF",turma:"A",n:32},{ano:"8EF",turma:"A",n:31},{ano:"9EF",turma:"A",n:30},{ano:"1EM",turma:"A",n:32},{ano:"2EM",turma:"A",n:31},{ano:"2EM",turma:"B",n:32},{ano:"3EM",turma:"A",n:31},{ano:"3EM",turma:"B",n:29}],
-"CE 109 - Franca":[{ano:"3EF",turma:"A",n:30},{ano:"3EF",turma:"B",n:31},{ano:"4EF",turma:"A",n:32},{ano:"5EF",turma:"A",n:30},{ano:"5EF",turma:"B",n:29},{ano:"6EF",turma:"A",n:31},{ano:"6EF",turma:"B",n:32},{ano:"7EF",turma:"A",n:30},{ano:"8EF",turma:"A",n:31},{ano:"9EF",turma:"A",n:32},{ano:"1EM",turma:"A",n:31},{ano:"2EM",turma:"A",n:30},{ano:"3EM",turma:"A",n:32},{ano:"3EM",turma:"B",n:30}]
+"CE 355 - Jundiaí":[{"ano": "3EF", "turma": "C", "n": 30}, {"ano": "4EF", "turma": "C", "n": 29}, {"ano": "4EF", "turma": "E", "n": 29}, {"ano": "4EF", "turma": "F", "n": 30}, {"ano": "5EF", "turma": "D", "n": 30}],
+"CE 341 - Sumaré":[{"ano": "1EM", "turma": "B", "n": 31}, {"ano": "2EM", "turma": "C", "n": 32}, {"ano": "3EF", "turma": "B", "n": 30}, {"ano": "3EM", "turma": "A", "n": 31}, {"ano": "4EF", "turma": "A", "n": 28}, {"ano": "4EF", "turma": "B", "n": 27}, {"ano": "5EF", "turma": "A", "n": 28}, {"ano": "5EF", "turma": "B", "n": 30}, {"ano": "7EF", "turma": "A", "n": 31}, {"ano": "7EF", "turma": "B", "n": 30}, {"ano": "8EF", "turma": "B", "n": 31}, {"ano": "9EF", "turma": "A", "n": 31}, {"ano": "9EF", "turma": "C", "n": 31}],
+"CE 109 - Franca":[{"ano": "1EM", "turma": "C", "n": 31}, {"ano": "2EM", "turma": "B", "n": 28}, {"ano": "2EM", "turma": "C", "n": 30}, {"ano": "3EF", "turma": "A", "n": 31}, {"ano": "3EF", "turma": "D", "n": 31}, {"ano": "3EM", "turma": "A", "n": 19}, {"ano": "3EM", "turma": "D", "n": 29}, {"ano": "4EF", "turma": "A", "n": 30}, {"ano": "4EF", "turma": "C", "n": 31}, {"ano": "5EF", "turma": "B", "n": 29}, {"ano": "7EF", "turma": "B", "n": 27}, {"ano": "8EF", "turma": "A", "n": 31}, {"ano": "8EF", "turma": "B", "n": 30}, {"ano": "8EF", "turma": "D", "n": 29}]
 };
 const NOMES=['Ana Beatriz Ferreira','Bruno Carvalho Lima','Camila Nunes Prado','Davi Moreira Santos','Eduarda Rocha Alves',
 'Felipe Andrade Costa','Gabriela Tavares Pinto','Heitor Barbosa Reis','Isabela Cardoso Melo','João Pedro Siqueira',
@@ -435,7 +425,6 @@ const api={
   async agendar(id,dia,hora){ return LIVE ? this.call('agendar',{unidade:S.unidade,id,dia,hora}) : {}; },
   async desmarcar(id){ return LIVE ? this.call('desmarcar',{unidade:S.unidade,id}) : {}; },
   async confirmar(){ return LIVE ? this.call('confirmar',{unidade:S.unidade}) : {}; },
-  async labs(n){ return LIVE ? this.call('laboratorios',{unidade:S.unidade,laboratorios:n}) : {}; },
   async estudantes(id){
     if(!LIVE){
       const t=S.turmas.find(x=>x.id===id);
@@ -448,13 +437,13 @@ const api={
   }
 };
 
-const S={unidade:null,turmas:[],picking:null,draft:null,confirmado:false,labs:1};
+const S={unidade:null,turmas:[],picking:null,draft:null,confirmado:false,gravando:false};
 const $=s=>document.querySelector(s);
 const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;};
 const LS=u=>'preteste2026:'+u;
 const toMin=h=>{const p=h.split(':');return (+p[0])*60+(+p[1]);};
 const toHora=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(Math.round(m%60)).padStart(2,'0');
-const salvar=()=>{try{localStorage.setItem(LS(S.unidade),JSON.stringify({turmas:S.turmas,confirmado:S.confirmado,labs:S.labs}));}catch(e){}};
+const salvar=()=>{try{localStorage.setItem(LS(S.unidade),JSON.stringify({turmas:S.turmas,confirmado:S.confirmado}));}catch(e){}};
 const encaixa=m=>Math.max(T0,Math.min(T1-DUR,Math.round(m/SNAP)*SNAP));
 
 /* ---------- entrada ---------- */
@@ -488,9 +477,9 @@ async function entrar(){
   const u=$('#selUnit').value;
   try{
     const r=await api.entrar(u);
-    S.unidade=u;S.turmas=r.turmas;S.confirmado=!!r.confirmado;S.labs=Number(r.laboratorios)||1;
+    S.unidade=u;S.turmas=r.turmas;S.confirmado=!!r.confirmado;
     if(!LIVE){const sv=JSON.parse(localStorage.getItem(LS(u))||'null');
-      if(sv){S.turmas=sv.turmas;S.confirmado=sv.confirmado;S.labs=sv.labs||1;}}
+      if(sv){S.turmas=sv.turmas;S.confirmado=sv.confirmado;}}
     localStorage.setItem('preteste2026:ultima',u);
     $('#gate').classList.add('hide');$('#app').classList.remove('hide');
     $('#uName').textContent=u;
@@ -500,21 +489,11 @@ async function entrar(){
 }
 $('#btnSwap').addEventListener('click',()=>{cancelarPick();$('#app').classList.add('hide');$('#gate').classList.remove('hide');});
 
-$('#labMinus').addEventListener('click',()=>mudaLabs(-1));
-$('#labPlus').addEventListener('click',()=>mudaLabs(1));
-async function mudaLabs(d){
-  const n=Math.min(6,Math.max(1,S.labs+d));
-  if(n===S.labs)return;
-  S.labs=n; try{await api.labs(n);}catch(e){}
-  render();
-  toast(n===1?'1 laboratório: uma turma por vez':n+' laboratórios: até '+n+' turmas em paralelo');
-}
-
 async function recarregar(){
   if(!S.unidade)return;
   try{
     const r=await api.entrar(S.unidade);
-    S.turmas=r.turmas;S.confirmado=!!r.confirmado;S.labs=Number(r.laboratorios)||1;
+    S.turmas=r.turmas;S.confirmado=!!r.confirmado;
     cancelarPick();
     toast('Agenda atualizada');
   }catch(e){toast('Não foi possível atualizar: '+e.message);}
@@ -533,7 +512,6 @@ function desenhaTimeline(){
   DIAS.forEach(d=>{
     const h=el('div','hcell');
     h.innerHTML=d.curto+' '+d.data+'<span class="dsub">'+d.nome+'</span>';
-    if(S.picking&&ONDA[S.picking.ano]===d.n)h.classList.add('wave');
     tl.appendChild(h);
   });
   const ax=el('div','axis');ax.style.height=H+'px';
@@ -542,7 +520,6 @@ function desenhaTimeline(){
 
   DIAS.forEach(d=>{
     const col=el('div','col');col.style.height=H+'px';
-    if(S.picking&&ONDA[S.picking.ano]===d.n)col.classList.add('wave');
     for(let m=T0+30;m<T1;m+=30){
       const r=el('div','rule'+(Math.round((m-T0)/30)%2?' half':''));
       r.style.top=((m-T0)*PXMIN)+'px';col.appendChild(r);
@@ -558,7 +535,7 @@ function desenhaTimeline(){
     const nL=Math.max(1,lanes.length);
     evs.forEach(t=>{
       const ini=toMin(t.hora);
-      const b=el('button','ev'+(t.dia!==ONDA[t.ano]?' off':''));
+      const b=el('button','ev');
       b.type='button';
       b.style.top=((ini-T0)*PXMIN)+'px';
       b.style.height=(DUR*PXMIN-3)+'px';
@@ -572,21 +549,27 @@ function desenhaTimeline(){
       col.appendChild(b);
     });
     const gh=el('div','ghost');gh.style.height=(DUR*PXMIN)+'px';col.appendChild(gh);
-    col.addEventListener('mousemove',e=>{
+    col.addEventListener('pointermove',e=>{
       if(!S.picking)return;
       const r=col.getBoundingClientRect(),m=encaixa(T0+(e.clientY-r.top)/PXMIN);
       gh.style.top=((m-T0)*PXMIN)+'px';gh.textContent=toHora(m)+'–'+toHora(m+DUR);
     });
-    col.addEventListener('click',e=>{
-      if(!S.picking)return;
+    // no modo de escolha, soltar o botão já fixa o horário — vale para clique simples
+    // e para arrastar o bloco pela coluna até a altura desejada
+    col.addEventListener('pointerdown',e=>{ if(S.picking) e.preventDefault(); });
+    col.addEventListener('pointerup',async e=>{
+      if(!S.picking||S.gravando)return;
+      const alvo=S.picking;
       const r=col.getBoundingClientRect();
-      propor(d.n,encaixa(T0+(e.clientY-r.top)/PXMIN));
+      const m=encaixa(T0+(e.clientY-r.top)/PXMIN);
+      S.gravando=true;
+      try{ await aplicarHorario(alvo,d.n,toHora(m)); }
+      finally{ S.gravando=false; }
     });
     tl.appendChild(col);
   });
-  $('#labN').textContent=S.labs;
   $('#gridHint').textContent=S.picking
-    ? 'Clique no dia e na altura do horário. Depois ajuste o minuto exato na barra de baixo.'
+    ? 'Clique no dia e na altura do horário para marcar. Para um minuto exato, digite no campo da barra de baixo e use Agendar.'
     : 'Clique em “Agendar” numa turma, ou arraste uma turma já marcada para mudar de horário';
 }
 
@@ -663,7 +646,6 @@ function desenhaTurmas(){
     if(t.dia&&t.hora){
       const dd=DIAS[t.dia-1];
       c3.appendChild(el('span','pill ok','✓ '+dd.curto+' '+dd.data+' · '+t.hora+'–'+toHora(toMin(t.hora)+DUR)));
-      if(t.dia!==ONDA[t.ano])c3.appendChild(el('div','tmeta','fora do dia previsto'));
     }else c3.appendChild(el('span','pill wait','sem horário'));
     const c4=el('td'),acts=el('div','acts');
     if(S.picking&&S.picking.id===t.id){
@@ -672,7 +654,7 @@ function desenhaTurmas(){
       const b=el('button','btn sm'+(t.dia?' ghost':''),t.dia?'Trocar horário':'Agendar');
       b.addEventListener('click',()=>iniciar(t));acts.appendChild(b);
       if(t.dia){
-        const l=el('button','btn sm ghost','Lista de presença');
+        const l=el('button','btn sm ghost','Ver estudantes');
         l.addEventListener('click',()=>abrirLista(t));acts.appendChild(l);
       }
     }
@@ -687,8 +669,7 @@ function desenhaProgresso(){
     :'<b>'+f+' de '+tot+'</b> turmas com horário';
   const b=$('#btnSend');b.disabled=f<tot;
   b.textContent=S.confirmado?'Reenviar confirmação':(f<tot?'Agende todas para confirmar':'Confirmar agendamento');
-  $('#btnAll').disabled=f===0;
-  $('#allHint').textContent=f===0?'Nenhuma turma agendada ainda.':f+' turma(s) pronta(s).';
+  $('#allHint').textContent=f===0?'Nenhuma turma agendada ainda.':f+' turma(s) agendada(s).';
 }
 
 /* ---------- agendar ---------- */
@@ -698,8 +679,7 @@ function iniciar(t){
   $('#dock').classList.add('on');
   $('#dkWho').textContent=NOME_ANO[t.ano]+' '+t.turma;
   const d=DIAS[ONDA[t.ano]-1];
-  $('#dkHint').textContent=t.dia?(DIAS[t.dia-1].nome+', '+DIAS[t.dia-1].data+' · '+t.hora+'–'+toHora(toMin(t.hora)+DUR))
-    :('Dia previsto: '+d.nome+', '+d.data+'. Clique na agenda para escolher.');
+  $('#dkHint').textContent='Clique na agenda para marcar direto. Dia sugerido: '+d.nome+', '+d.data+'.';
   $('#dkTime').value=t.hora||'07:00';
   document.querySelector('.tlwrap').scrollIntoView({behavior:'smooth',block:'center'});
 }
@@ -707,31 +687,17 @@ function cancelarPick(){
   S.picking=null;S.draft=null;document.body.classList.remove('picking');
   $('#dock').classList.remove('on');render();
 }
-function propor(dia,min){
-  S.draft={dia,hora:toHora(min)};
-  $('#dkTime').value=toHora(min);
-  const d=DIAS[dia-1];
-  $('#dkHint').textContent=d.nome+', '+d.data+' · '+toHora(min)+'–'+toHora(min+DUR);
-}
 $('#dkTime').addEventListener('change',()=>{
   const v=$('#dkTime').value;if(!v||!S.picking)return;
-  propor(S.draft?S.draft.dia:ONDA[S.picking.ano],encaixa(toMin(v)));
+  S.draft={dia:S.draft?S.draft.dia:ONDA[S.picking.ano],hora:toHora(encaixa(toMin(v)))};
+  const d=DIAS[S.draft.dia-1];
+  $('#dkHint').textContent='Confirme em Agendar para marcar '+d.nome+', '+d.data+' · '
+    +S.draft.hora+'–'+toHora(toMin(S.draft.hora)+DUR);
 });
 $('#dkCancel').addEventListener('click',cancelarPick);
 $('#dkOk').addEventListener('click',confirmarHorario);
 
 async function aplicarHorario(t,dia,hora){
-  const n=conflitos(dia,hora,t.id);
-  if(n>=S.labs){
-    if(!confirm('Neste horário já há '+n+' turma(s) em aplicação, e a unidade tem '+S.labs+' laboratório(s) informado(s).\n\n'
-      +'Se você tem mais laboratórios, ajuste o número no quadro da agenda.\n\nAgendar assim mesmo?'))return false;
-  }
-  if(dia!==ONDA[t.ano]){
-    const d=DIAS[ONDA[t.ano]-1];
-    if(!confirm('O dia previsto para '+NOME_ANO[t.ano]+' é '+d.nome+', '+d.data+'.\n\n'
-      +'Aplicar em outro dia aumenta o risco de o conteúdo dos itens circular entre turmas. '
-      +'Faça isso apenas se não houver alternativa.\n\nDeseja agendar assim mesmo?'))return false;
-  }
   const antes={dia:t.dia,hora:t.hora};
   try{
     await api.agendar(t.id,dia,hora);
@@ -763,39 +729,18 @@ function abrirModal(titulo,sub,corpo,botoes){
   (botoes||[]).forEach(x=>{const btn=el('button','btn'+(x.ghost?' ghost':''),x.txt);btn.addEventListener('click',x.fn);f.appendChild(btn);});
   $('#scrim').classList.add('open');
 }
-const fecharModal=()=>$('#scrim').classList.remove('open');
-$('#mX').addEventListener('click',fecharModal);
-$('#scrim').addEventListener('click',e=>{if(e.target===$('#scrim'))fecharModal();});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){fecharModal();cancelarPick();}});
-
-function abrirTurma(t){
-  const d=DIAS[t.dia-1],box=el('div');box.style.padding='18px 20px';
-  if(t.dia!==ONDA[t.ano]){
-    const w=el('div','note warn');
-    w.innerHTML='Agendada fora do dia previsto para o ano escolar (<b>'+DIAS[ONDA[t.ano]-1].nome+', '+DIAS[ONDA[t.ano]-1].data+'</b>).';
-    box.appendChild(w);
-  }
-  const par=conflitos(t.dia,t.hora,t.id);
-  if(par>0){
-    const w=el('div','note info');
-    w.innerHTML='Em paralelo com <b>'+par+' outra(s) turma(s)</b> neste horário. A unidade informou '+S.labs+' laboratório(s).';
-    box.appendChild(w);
-  }
-  box.appendChild(el('p',null,t.n+' estudantes. '+Math.ceil(t.n/2)+' respondem a Língua Portuguesa e '+Math.floor(t.n/2)+' a Matemática, na mesma sessão.'));
-  abrirModal(NOME_ANO[t.ano]+' '+t.turma,d.nome+', '+d.data+' · '+t.hora+'–'+toHora(toMin(t.hora)+DUR),box,[
-    {txt:'Desmarcar',ghost:true,fn:async()=>{
-      try{await api.desmarcar(t.id);t.dia=null;t.hora=null;S.confirmado=false;fecharModal();render();toast('Horário desmarcado');}
-      catch(e){toast('Erro: '+e.message);}}},
-    {txt:'Trocar horário',ghost:true,fn:()=>{fecharModal();iniciar(t);}},
-    {txt:'Lista de presença',fn:()=>{fecharModal();abrirLista(t);}}
-  ]);
+let PEND=null;
+function fecharModal(){
+  $('#scrim').classList.remove('open');
+  if(PEND){const f=PEND;PEND=null;f(false);}
 }
+
 
 async function abrirLista(t){
   const est=await api.estudantes(t.id),d=DIAS[t.dia-1];
   const tab=el('table','list');
   tab.innerHTML='<thead><tr><th style="width:52px">Nº / máquina</th><th>Estudante</th><th style="width:88px">Matrícula</th>'
-    +'<th style="width:124px">Componente</th><th style="width:66px">Presente</th><th>Link de acesso</th></tr></thead>';
+    +'<th style="width:150px">Componente</th></tr></thead>';
   const tb=el('tbody');
   est.forEach(e=>{
     const tr=el('tr');
@@ -803,15 +748,12 @@ async function abrirLista(t){
     tr.appendChild(el('td',null,e.nome));
     tr.appendChild(el('td',null,e.matricula||''));
     tr.appendChild(el('td',null,e.componente));
-    tr.appendChild(el('td','box','☐'));
-    const c=el('td',null,CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+e.token);
-    c.style.cssText='font-family:ui-monospace,monospace;font-size:11.5px;color:var(--ink3);word-break:break-all';
-    tr.appendChild(c);tb.appendChild(tr);
+    tb.appendChild(tr);
   });
   tab.appendChild(tb);
-  abrirModal('Lista de presença — '+NOME_ANO[t.ano]+' '+t.turma,
+  abrirModal('Estudantes — '+NOME_ANO[t.ano]+' '+t.turma,
     d.nome+', '+d.data+' · '+t.hora+'–'+toHora(toMin(t.hora)+DUR)+' · '+est.length+' estudantes',
-    tab,[{txt:'Baixar PDF',fn:()=>gerarPDF([{t:t,est:est}],'lista_'+t.ano+'_'+t.turma+'.pdf')}]);
+    tab,[{txt:'Fechar',fn:fecharModal}]);
 }
 
 $('#btnAll').addEventListener('click',async()=>{
@@ -823,9 +765,16 @@ $('#btnAll').addEventListener('click',async()=>{
 
 /* ---------- PDF ---------- */
 function gerarPDF(pacote,nome){
-  if(!window.jspdf){toast('O gerador de PDF não carregou. Verifique a conexão.');return;}
-  const jsPDF=window.jspdf.jsPDF;
-  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const ns=window.jspdf;
+  if(!ns||!ns.jsPDF){
+    toast('O gerador de PDF não carregou. Recarregue a página e tente de novo.');
+    return;
+  }
+  const doc=new ns.jsPDF({unit:'mm',format:'a4'});
+  if(typeof doc.autoTable!=='function'){
+    toast('O componente de tabelas do PDF não carregou. Recarregue a página.');
+    return;
+  }
   pacote.forEach((p,i)=>{
     if(i>0)doc.addPage();
     const t=p.t,est=p.est,d=DIAS[t.dia-1],fim=toHora(toMin(t.hora)+DUR);
@@ -869,8 +818,34 @@ function gerarPDF(pacote,nome){
     doc.text('Recolha e descarte as folhas de rascunho ao fim da sessão e confirme o logoff das contas. O pré-teste não vale nota e não gera resultado individual.',14,288.6);
     doc.text('Página '+k+' de '+np,196,281.5,{align:'right'});
   }
-  try{doc.save(nome);toast('PDF gerado');}
-  catch(e){window.open(doc.output('bloburl'),'_blank');}
+  entregarPDF(doc,nome);
+}
+
+/**
+ * Entrega o arquivo. O download automático funciona no site publicado, mas é
+ * bloqueado quando a página roda dentro de um visualizador, e nesse caso falha
+ * sem erro. Por isso o link fica sempre visível.
+ */
+function entregarPDF(doc,nome){
+  let url;
+  try{ url=doc.output('bloburl'); }
+  catch(e){ toast('Não foi possível gerar o PDF: '+e.message); return; }
+
+  try{
+    const a=document.createElement('a');
+    a.href=url; a.download=nome; a.style.display='none';
+    document.body.appendChild(a); a.click(); a.remove();
+  }catch(e){}
+
+  const box=el('div'); box.style.padding='18px 20px';
+  const p=el('p',null,'Se o download não começou sozinho, use o botão abaixo. O arquivo abre em outra aba e pode ser salvo ou impresso de lá.');
+  p.style.cssText='margin:0 0 14px;color:var(--ink2)';
+  box.appendChild(p);
+  const a=document.createElement('a');
+  a.className='btn'; a.href=url; a.target='_blank'; a.rel='noopener';
+  a.textContent='Abrir '+nome;
+  box.appendChild(a);
+  abrirModal('PDF gerado','',box,[{txt:'Fechar',fn:fecharModal}]);
 }
 
 $('#btnSend').addEventListener('click',async()=>{
