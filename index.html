@@ -335,7 +335,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
     <div class="pbody">
       <div class="note info"><b>Os links só podem ser entregues no dia da sessão.</b> Cada link abre uma tela com o nome do estudante e os botões da prova e do formulário de respostas. Antes da semana de aplicação eles não funcionam, mesmo que alguém tente.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <button class="btn ghost" id="btnAll">Baixar o PDF de todas as turmas agendadas</button>
+        <button class="btn" id="btnAll">Baixar o PDF de todas as turmas agendadas</button>
         <span class="tmeta" id="allHint"></span>
       </div>
     </div>
@@ -684,7 +684,18 @@ function desenhaTurmas(){
   });
 }
 
+function garanteBotaoLista(){
+  if(document.getElementById('btnAll')) return;
+  const alvo=document.getElementById('allHint');
+  if(!alvo||!alvo.parentNode) return;
+  const b=el('button','btn','Baixar o PDF de todas as turmas agendadas');
+  b.id='btnAll';
+  b.addEventListener('click',baixarTodas);
+  alvo.parentNode.insertBefore(b,alvo);
+}
+
 function desenhaProgresso(){
+  garanteBotaoLista();
   const tot=S.turmas.length,f=S.turmas.filter(t=>t.dia).length;
   $('#pBar').style.width=(tot?f/tot*100:0)+'%';
   $('#pTxt').innerHTML=S.confirmado?'<b>Agendamento confirmado.</b> Você ainda pode alterar até 18/09.'
@@ -782,12 +793,15 @@ async function abrirLista(t){
     tab,[{txt:'Baixar PDF',fn:()=>gerarPDF([{t:t,est:est}],'lista_'+t.ano+'_'+t.turma+'.pdf')}]);
 }
 
-$('#btnAll').addEventListener('click',async()=>{
+async function baixarTodas(){
   const ags=S.turmas.filter(t=>t.dia).sort((a,b)=>(a.dia-b.dia)||toMin(a.hora)-toMin(b.hora));
+  if(!ags.length){toast('Nenhuma turma agendada ainda.');return;}
+  toast('Gerando o PDF de '+ags.length+' turma(s)…');
   const pac=[];
   for(const t of ags) pac.push({t:t,est:await api.estudantes(t.id)});
   gerarPDF(pac,'listas_'+S.unidade.replace(/[^\w]+/g,'_')+'.pdf');
-});
+}
+$('#btnAll').addEventListener('click',baixarTodas);
 
 /* ---------- PDF ---------- */
 function gerarPDF(pacote,nome){
