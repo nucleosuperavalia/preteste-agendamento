@@ -257,6 +257,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
   <div class="brand">Pré-teste AvaliaSESI-SP<span>21 a 25 de setembro de 2026</span></div>
   <div class="unitbox">
     <div class="unitname" id="uName"></div>
+    <span id="versao" style="font-size:11.5px;color:#6E82A0;letter-spacing:.03em"></span>
     <button class="linkbtn" id="btnRecarregar">atualizar</button>
     <button class="linkbtn" id="btnSwap">trocar unidade</button>
   </div>
@@ -366,6 +367,8 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 /* ==========================================================================
    CONFIG — preencha para sair do modo demonstração
    ========================================================================== */
+const VERSAO = 'v7 · lista de presença ativa';
+
 const CONFIG = {
   API_URL:    'https://script.google.com/macros/s/AKfycbz3bd1VytdopAgjExMM-jBo7PXWb1iSpGBQTyZ38-A4TFoWtFnAwaR4NRIBSoHGG0wE2g/exec',   // URL do app da web do Apps Script (termina em /exec)
   MANUAL_URL: 'https://drive.google.com/file/d/1JhdH79wOALQH29HfM6JuprGON6b22T_b/view?usp=sharing',   // link do manual em PDF
@@ -470,6 +473,7 @@ const encaixa=m=>Math.max(T0,Math.min(T1-DUR,Math.round(m/SNAP)*SNAP));
 
 /* ---------- entrada ---------- */
 (async function(){
+  $('#versao').textContent = VERSAO + (LIVE ? ' · API ligada' : ' · demonstração');
   if(LIVE) $('#demoflag').classList.add('hide');
 
   if(!CONFIG.AGENDAMENTO_LIBERADO){
