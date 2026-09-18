@@ -322,7 +322,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
   </section>
 
   <section class="panel">
-    <div class="phead"><h2>Turmas</h2><span class="sub">agende o horário de cada uma das suas turmas</span></div>
+    <div class="phead"><h2>Turmas</h2><span class="sub">a lista de presença sai em PDF assim que a turma tem horário</span></div>
     <div class="pbody" style="padding:14px 6px">
       <table class="turmas"><thead><tr>
         <th style="padding-left:12px">Turma</th><th>Dia sugerido</th><th>Agendamento</th><th></th>
@@ -331,11 +331,11 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
   </section>
 
   <section class="panel">
-    <div class="phead"><h2>Listas de presença</h2><span class="sub">em breve</span></div>
+    <div class="phead"><h2>Listas de presença</h2><span class="sub">uma folha por turma, com o link individual de acesso</span></div>
     <div class="pbody">
-      <div class="note warn"><b>A lista para download estará disponível em breve.</b> Assim que for liberada, cada turma agendada terá uma folha em PDF com os nomes, a ordem de chamada, o componente de cada estudante, o campo de presença e o link individual de acesso. Você receberá um aviso quando isso acontecer.</div>
+      <div class="note info"><b>Os links só podem ser entregues no dia da sessão.</b> Cada link abre uma tela com o nome do estudante e os botões da prova e do formulário de respostas. Antes da semana de aplicação eles não funcionam, mesmo que alguém tente.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <button class="btn ghost" id="btnAll" disabled>Baixar o PDF de todas as turmas</button>
+        <button class="btn ghost" id="btnAll">Baixar o PDF de todas as turmas agendadas</button>
         <span class="tmeta" id="allHint"></span>
       </div>
     </div>
@@ -369,7 +369,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 const CONFIG = {
   API_URL:    'https://script.google.com/macros/s/AKfycbz3bd1VytdopAgjExMM-jBo7PXWb1iSpGBQTyZ38-A4TFoWtFnAwaR4NRIBSoHGG0wE2g/exec',   // URL do app da web do Apps Script (termina em /exec)
   MANUAL_URL: 'https://drive.google.com/file/d/1JhdH79wOALQH29HfM6JuprGON6b22T_b/view?usp=sharing',   // link do manual em PDF
-  PROVA_URL:  'https://prova.sesisp.org.br/e/',
+  PROVA_URL:  'https://blobsavaliacaosesi.blob.core.windows.net/preteste/p/index.html?t=',
   // ---- trava de publicação -------------------------------------------------
   // false  = a página mostra o aviso de "em breve" e ninguém agenda.
   // true   = o agendamento abre. Mude só esta linha quando quiser liberar.
@@ -676,7 +676,7 @@ function desenhaTurmas(){
       const b=el('button','btn sm'+(t.dia?' ghost':''),t.dia?'Trocar horário':'Agendar');
       b.addEventListener('click',()=>iniciar(t));acts.appendChild(b);
       if(t.dia){
-        const l=el('button','btn sm ghost','Ver estudantes');
+        const l=el('button','btn sm ghost','Lista de presença');
         l.addEventListener('click',()=>abrirLista(t));acts.appendChild(l);
       }
     }
@@ -691,7 +691,8 @@ function desenhaProgresso(){
     :'<b>'+f+' de '+tot+'</b> turmas com horário';
   const b=$('#btnSend');b.disabled=f<tot;
   b.textContent=S.confirmado?'Reenviar confirmação':(f<tot?'Agende todas para confirmar':'Confirmar agendamento');
-  $('#allHint').textContent=f===0?'Nenhuma turma agendada ainda.':f+' turma(s) agendada(s).';
+  $('#btnAll').disabled=f===0;
+  $('#allHint').textContent=f===0?'Nenhuma turma agendada ainda.':f+' turma(s) pronta(s).';
 }
 
 /* ---------- agendar ---------- */
@@ -762,7 +763,7 @@ async function abrirLista(t){
   const est=await api.estudantes(t.id),d=DIAS[t.dia-1];
   const tab=el('table','list');
   tab.innerHTML='<thead><tr><th style="width:52px">Nº / máquina</th><th>Estudante</th><th style="width:88px">Matrícula</th>'
-    +'<th style="width:150px">Componente</th></tr></thead>';
+    +'<th style="width:124px">Componente</th><th style="width:66px">Presente</th><th>Link de acesso</th></tr></thead>';
   const tb=el('tbody');
   est.forEach(e=>{
     const tr=el('tr');
@@ -770,12 +771,15 @@ async function abrirLista(t){
     tr.appendChild(el('td',null,e.nome));
     tr.appendChild(el('td',null,e.matricula||''));
     tr.appendChild(el('td',null,e.componente));
-    tb.appendChild(tr);
+    tr.appendChild(el('td','box','☐'));
+    const c=el('td',null,CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+e.token);
+    c.style.cssText='font-family:ui-monospace,monospace;font-size:11px;color:var(--ink3);word-break:break-all';
+    tr.appendChild(c);tb.appendChild(tr);
   });
   tab.appendChild(tb);
-  abrirModal('Estudantes — '+NOME_ANO[t.ano]+' '+t.turma,
+  abrirModal('Lista de presença — '+NOME_ANO[t.ano]+' '+t.turma,
     d.nome+', '+d.data+' · '+t.hora+'–'+toHora(toMin(t.hora)+DUR)+' · '+est.length+' estudantes',
-    tab,[{txt:'Fechar',fn:fecharModal}]);
+    tab,[{txt:'Baixar PDF',fn:()=>gerarPDF([{t:t,est:est}],'lista_'+t.ano+'_'+t.turma+'.pdf')}]);
 }
 
 $('#btnAll').addEventListener('click',async()=>{
