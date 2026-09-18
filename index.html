@@ -367,7 +367,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 /* ==========================================================================
    CONFIG — preencha para sair do modo demonstração
    ========================================================================== */
-const VERSAO = 'v7 · lista de presença ativa';
+const VERSAO = 'v9 · lista com link clicável';
 
 const CONFIG = {
   API_URL:    'https://script.google.com/macros/s/AKfycbz3bd1VytdopAgjExMM-jBo7PXWb1iSpGBQTyZ38-A4TFoWtFnAwaR4NRIBSoHGG0wE2g/exec',   // URL do app da web do Apps Script (termina em /exec)
@@ -800,10 +800,49 @@ async function abrirLista(t){
 async function baixarTodas(){
   const ags=S.turmas.filter(t=>t.dia).sort((a,b)=>(a.dia-b.dia)||toMin(a.hora)-toMin(b.hora));
   if(!ags.length){toast('Nenhuma turma agendada ainda.');return;}
-  toast('Gerando o PDF de '+ags.length+' turma(s)…');
-  const pac=[];
-  for(const t of ags) pac.push({t:t,est:await api.estudantes(t.id)});
-  gerarPDF(pac,'listas_'+S.unidade.replace(/[^\w]+/g,'_')+'.pdf');
+  const b=$('#btnAll'); if(b) b.disabled=true;
+  const pac=[], falhas=[];
+  try{
+    for(let i=0;i<ags.length;i++){
+      const t=ags[i];
+      toast('Buscando estudantes… '+(i+1)+' de '+ags.length+' ('+NOME_ANO[t.ano]+' '+t.turma+')');
+      try{
+        const est=await api.estudantes(t.id);
+        if(est && est.length) pac.push({t:t,est:est});
+        else falhas.push(NOME_ANO[t.ano]+' '+t.turma+': sem estudantes cadastrados');
+      }catch(e){
+        falhas.push(NOME_ANO[t.ano]+' '+t.turma+': '+(e.message||'erro na consulta'));
+      }
+    }
+    if(!pac.length){
+      abrirModal('Não foi possível montar a lista','',avisoFalhas(falhas,0),[{txt:'Fechar',fn:fecharModal}]);
+      return;
+    }
+    toast('Montando o PDF de '+pac.length+' turma(s)…');
+    gerarPDF(pac,'listas_'+S.unidade.replace(/[^\w]+/g,'_')+'.pdf');
+    if(falhas.length) setTimeout(()=>{
+      abrirModal('Algumas turmas ficaram de fora','',avisoFalhas(falhas,pac.length),[{txt:'Fechar',fn:fecharModal}]);
+    },600);
+  }catch(e){
+    abrirModal('Erro ao gerar a lista','',avisoFalhas([String(e.message||e)],pac.length),[{txt:'Fechar',fn:fecharModal}]);
+  }finally{
+    if(b) b.disabled=false;
+  }
+}
+
+function avisoFalhas(lista,ok){
+  const box=el('div'); box.style.padding='18px 20px';
+  if(ok) box.appendChild(el('p',null,ok+' turma(s) entraram no PDF. As demais falharam:'));
+  else box.appendChild(el('p',null,'Nenhuma turma pôde ser consultada. Detalhe:'));
+  const ul=document.createElement('ul');
+  ul.style.cssText='margin:8px 0 12px;padding-left:20px;color:var(--ink2);font-size:13.5px;line-height:1.6';
+  lista.slice(0,12).forEach(x=>{const li=document.createElement('li');li.textContent=x;ul.appendChild(li);});
+  box.appendChild(ul);
+  const n=el('div','note info');
+  n.innerHTML='Se a mensagem falar em token ou coluna, a aba <b>Estudantes</b> da planilha ainda não '
+    +'está completa. Tente a lista de uma turma só, pelo botão na linha dela, para confirmar.';
+  box.appendChild(n);
+  return box;
 }
 $('#btnAll').addEventListener('click',baixarTodas);
 
@@ -832,12 +871,12 @@ function gerarPDF(pacote,nome){
     doc.text(d.nome+', '+d.data+'/2026     '+t.hora+' às '+fim+'     '+est.length+' estudantes',14,34.6);
     doc.setDrawColor(200,208,220);doc.line(14,38.5,196,38.5);
     doc.setFontSize(8.5);doc.setTextColor(110,120,135);
-    doc.text('Aplicador: __________________________________     Laboratório: ____________     Assinatura: __________________________________',14,43.5);
+    doc.text('Aplicador: ______________________________________________     Assinatura: ______________________________________________',14,43.5);
     doc.setFontSize(7.6);
     doc.text('Os estudantes sentam nas máquinas na sequência da lista de chamada, que é a numeração desta folha.',14,47.6);
     doc.autoTable({
       startY:50.5,
-      head:[['Nº\nmáquina','Estudante','Matrícula','Componente','Presente','Link de acesso individual']],
+      head:[['Nº','Estudante','Matrícula','Componente','Presente','Link de acesso individual']],
       body:est.map(e=>[e.ordem,e.nome,e.matricula||'',e.componente,'',
         CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+e.token]),
       styles:{font:'helvetica',fontSize:8.2,cellPadding:1.9,lineColor:[205,212,222],lineWidth:.1,textColor:[20,36,61],valign:'middle'},
@@ -845,11 +884,18 @@ function gerarPDF(pacote,nome){
       alternateRowStyles:{fillColor:[244,246,250]},
       columnStyles:{0:{cellWidth:9,halign:'right'},1:{cellWidth:56},2:{cellWidth:20},
         3:{cellWidth:29},4:{cellWidth:18,halign:'center'},
-        5:{cellWidth:50,font:'courier',fontSize:7.2,textColor:[110,120,135]}},
+        5:{cellWidth:50,font:'courier',fontSize:6.6,textColor:[47,95,168]}},
       didDrawCell:function(data){
-        if(data.section==='body'&&data.column.index===4){
+        if(data.section!=='body')return;
+        if(data.column.index===4){
           const s=3.8,x=data.cell.x+data.cell.width/2-s/2,y=data.cell.y+data.cell.height/2-s/2;
           doc.setDrawColor(120,130,145);doc.setLineWidth(.25);doc.rect(x,y,s,s);
+        }
+        if(data.column.index===5){
+          // torna a área da célula um hiperlink: clicar no PDF abre a prova do estudante
+          const e=est[data.row.index];
+          if(e) doc.link(data.cell.x,data.cell.y,data.cell.width,data.cell.height,
+                        {url:CONFIG.PROVA_URL+e.token});
         }
       },
       margin:{left:14,right:14,bottom:16}
@@ -858,7 +904,7 @@ function gerarPDF(pacote,nome){
   const np=doc.internal.getNumberOfPages();
   for(let k=1;k<=np;k++){
     doc.setPage(k);doc.setFontSize(7.5);doc.setTextColor(150,158,170);doc.setFont('helvetica','normal');
-    doc.text('Entregue o link individual apenas no dia da sessão. Não é permitido celular, calculadora, régua ou material de consulta, nem fotografar os itens.',14,285);
+    doc.text('Entregue o link individual apenas no dia da sessão. No PDF, o link é clicável. Não é permitido celular, calculadora, régua ou material de consulta, nem fotografar os itens.',14,285);
     doc.text('Recolha e descarte as folhas de rascunho ao fim da sessão e confirme o logoff das contas. O pré-teste não vale nota e não gera resultado individual.',14,288.6);
     doc.text('Página '+k+' de '+np,196,281.5,{align:'right'});
   }
