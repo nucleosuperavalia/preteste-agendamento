@@ -93,7 +93,7 @@ section{margin-top:26px}
 .stepper span{min-width:34px;text-align:center;font-weight:700;font-size:14px}
 
 .tlwrap{overflow-x:auto}
-.tl{min-width:780px;display:grid;grid-template-columns:58px repeat(5,1fr)}
+.tl{min-width:1040px;display:grid;grid-template-columns:58px repeat(8,1fr)}
 .tl .hcell{padding:9px 10px;background:var(--surface2);border-bottom:1px solid var(--line);border-right:1px solid var(--line2);
   font-family:'Archivo Narrow','Archivo',sans-serif;font-size:13px;font-weight:700;white-space:nowrap}
 .tl .hcell:last-child{border-right:none}
@@ -211,7 +211,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
     <h1>Pré-teste AvaliaSESI-SP 2026</h1>
     <p class="lead">Esta é a página em que cada unidade vai agendar os horários das suas turmas e baixar as listas de presença. <b id="soonPrev"></b></p>
     <div class="when">
-      <div><b>21 a 30/09</b><span>semana de aplicação</span></div>
+      <div><b>21 a 30/09</b><span>período de aplicação</span></div>
       <div><b>3.º EF ao 3.º EM</b><span>anos participantes</span></div>
       <div><b>Online</b><span>no laboratório ou com notebooks</span></div>
     </div>
@@ -222,14 +222,14 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 
     <h2>O que a unidade já pode ir preparando</h2>
     <ul>
-      <li>Reservar o laboratório ou os notebooks para a semana de 21 a 30 de setembro, contando até 3 horas por turma.</li>
+      <li>Reservar o laboratório ou os notebooks para o período de 21 a 30 de setembro, contando até 3 horas por turma.</li>
       <li>Verificar quem ainda não tem e-mail educacional e pedir a criação com antecedência, porque o acesso à prova é feito com login e senha.</li>
       <li>Definir o professor aplicador de cada turma, lembrando que ele não pode lecionar o componente avaliado.</li>
       <li>Planejar a atividade pedagógica dos estudantes do mapeamento e dos que têm necessidades de acessibilidade e apoio, que não participam desta aplicação.</li>
     </ul>
 
     <h2>Quando esta página abrir</h2>
-    <p>Você vai encontrar aqui a lista das turmas da sua unidade que farão o pré-teste, a agenda da semana para marcar o horário de cada uma e a lista de presença de cada turma em PDF, com o link individual de acesso de cada estudante.</p>
+    <p>Você vai encontrar aqui a lista das turmas da sua unidade que farão o pré-teste, a agenda do período para marcar o horário de cada uma e a lista de presença de cada turma em PDF, com o link individual de acesso de cada estudante.</p>
 
     <div style="margin-top:24px"><a class="btn" id="soonManual" href="#">Baixar o manual de aplicação (PDF)</a></div>
 
@@ -278,7 +278,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
         <p><b>O que está sendo testado é o item, não o estudante.</b> O pré-teste serve para descobrir, antes da prova de novembro, quais itens são claros e válidos e quais têm problema de gabarito, de enunciado ou de distrator. Não vale nota e não haverá divulgação de resultados.</p>
         <p>A aplicação é online, no laboratório ou com notebooks. Cada estudante faz <b>um único caderno</b>, ou de Língua Portuguesa, ou de Matemática. Dentro da turma, o sistema divide a metade de cada componente sozinho: a unidade não precisa separar ninguém.</p>
         <p>Reserve <b>até 3 horas</b> por turma, que é a duração máxima prevista. A maioria termina bem antes, mas a agenda trabalha com o tempo cheio para não atropelar a turma seguinte. Se a unidade tiver espaço para isso, pode marcar mais de uma turma no mesmo horário: elas aparecem lado a lado na agenda.</p>
-        <p><b>Sobre o dia sugerido.</b> Cada ano escolar tem um dia sugerido na semana, o mesmo para toda a rede, o que ajuda a manter o conteúdo dos itens em circulação pelo menor tempo possível. É só uma sugestão: monte a semana da forma que funcionar para a sua unidade.</p>
+        <p><b>Sobre o dia sugerido.</b> Cada ano escolar tem um dia sugerido, o mesmo para toda a rede, o que ajuda a manter o conteúdo dos itens em circulação pelo menor tempo possível. É só uma sugestão: organize o período da forma que funcionar para a sua unidade.</p>
       </div>
       <div class="aside">
         <div class="fact"><b>até 3 h</b>tempo reservado por turma no laboratório</div>
@@ -313,7 +313,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 
   <section class="panel">
     <div class="phead">
-      <h2>Agenda da semana</h2>
+      <h2>Agenda do período</h2>
       <span class="sub" id="gridHint">Clique em “Agendar” numa turma, ou arraste uma turma já marcada para mudar de horário</span>
     </div>
     <div class="tlwrap"><div class="tl" id="tl"></div></div>
@@ -334,7 +334,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
   <section class="panel">
     <div class="phead"><h2>Listas de presença</h2><span class="sub">uma folha por turma, com o link individual de acesso</span></div>
     <div class="pbody">
-      <div class="note info"><b>Os links só podem ser entregues no dia da sessão.</b> Cada link abre uma tela com o nome do estudante e os botões da prova e do formulário de respostas. Antes da semana de aplicação eles não funcionam, mesmo que alguém tente.</div>
+      <div class="note info"><b>Os links só podem ser entregues no dia da sessão.</b> Cada link abre uma tela com o nome do estudante e os botões da prova e do formulário de respostas. Antes do período de aplicação eles não funcionam, mesmo que alguém tente.</div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
         <button class="btn" id="btnAll">Baixar o PDF de todas as turmas agendadas</button>
         <span class="tmeta" id="allHint"></span>
@@ -367,7 +367,7 @@ select,input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--line
 /* ==========================================================================
    CONFIG — preencha para sair do modo demonstração
    ========================================================================== */
-const VERSAO = 'v9 · lista com link clicável';
+const VERSAO = 'v10 · lista com código de acesso';
 
 const CONFIG = {
   API_URL:    'https://script.google.com/macros/s/AKfycbz3bd1VytdopAgjExMM-jBo7PXWb1iSpGBQTyZ38-A4TFoWtFnAwaR4NRIBSoHGG0wE2g/exec',   // URL do app da web do Apps Script (termina em /exec)
@@ -392,7 +392,7 @@ const DIAS=[
   {n:5,curto:'sex',data:'25/09',nome:'sexta-feira'},
   {n:6,curto:'seg',data:'28/09',nome:'segunda-feira'},
   {n:7,curto:'ter',data:'29/09',nome:'terça-feira'},
-  {n:8,curto:'qua',data:'30/09',nome:'quarta-feira'},
+  {n:8,curto:'qua',data:'30/09',nome:'quarta-feira'}
 ];
 const ONDA={'3EF':1,'4EF':1,'5EF':2,'6EF':2,'7EF':3,'8EF':3,'9EF':4,'1EM':4,'2EM':5,'3EM':5};
 const NOME_ANO={'3EF':'3.º ano EF','4EF':'4.º ano EF','5EF':'5.º ano EF','6EF':'6.º ano EF','7EF':'7.º ano EF',
@@ -705,7 +705,7 @@ function desenhaProgresso(){
   garanteBotaoLista();
   const tot=S.turmas.length,f=S.turmas.filter(t=>t.dia).length;
   $('#pBar').style.width=(tot?f/tot*100:0)+'%';
-  $('#pTxt').innerHTML=S.confirmado?'<b>Agendamento confirmado.</b> Você ainda pode alterar até 18/09.'
+  $('#pTxt').innerHTML=S.confirmado?'<b>Agendamento confirmado.</b> Você ainda pode alterar até 30/09.'
     :'<b>'+f+' de '+tot+'</b> turmas com horário';
   const b=$('#btnSend');b.disabled=f<tot;
   b.textContent=S.confirmado?'Reenviar confirmação':(f<tot?'Agende todas para confirmar':'Confirmar agendamento');
@@ -781,7 +781,7 @@ async function abrirLista(t){
   const est=await api.estudantes(t.id),d=DIAS[t.dia-1];
   const tab=el('table','list');
   tab.innerHTML='<thead><tr><th style="width:52px">Nº / máquina</th><th>Estudante</th><th style="width:88px">Matrícula</th>'
-    +'<th style="width:124px">Componente</th><th style="width:66px">Presente</th><th>Link de acesso</th></tr></thead>';
+    +'<th style="width:124px">Componente</th><th style="width:66px">Presente</th><th style="width:110px">Código de acesso</th></tr></thead>';
   const tb=el('tbody');
   est.forEach(e=>{
     const tr=el('tr');
@@ -790,8 +790,8 @@ async function abrirLista(t){
     tr.appendChild(el('td',null,e.matricula||''));
     tr.appendChild(el('td',null,e.componente));
     tr.appendChild(el('td','box','☐'));
-    const c=el('td',null,CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+e.token);
-    c.style.cssText='font-family:ui-monospace,monospace;font-size:11px;color:var(--ink3);word-break:break-all';
+    const c=el('td',null,e.token);
+    c.style.cssText='font-family:ui-monospace,monospace;font-size:12.5px;font-weight:700;color:var(--wave)';
     tr.appendChild(c);tb.appendChild(tr);
   });
   tab.appendChild(tb);
@@ -877,17 +877,17 @@ function gerarPDF(pacote,nome){
     doc.text('Aplicador: ______________________________________________     Assinatura: ______________________________________________',14,43.5);
     doc.setFontSize(7.6);
     doc.text('Os estudantes sentam nas máquinas na sequência da lista de chamada, que é a numeração desta folha.',14,47.6);
+    doc.text('Acesso à prova: '+CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+' + código de acesso',14,51.4);
     doc.autoTable({
-      startY:50.5,
-      head:[['Nº','Estudante','Matrícula','Componente','Presente','Link de acesso individual']],
-      body:est.map(e=>[e.ordem,e.nome,e.matricula||'',e.componente,'',
-        CONFIG.PROVA_URL.replace(/^https?:\/\//,'')+e.token]),
+      startY:54.5,
+      head:[['Nº','Estudante','Matrícula','Componente','Presente','Código de acesso']],
+      body:est.map(e=>[e.ordem,e.nome,e.matricula||'',e.componente,'',e.token||'SEM CÓDIGO']),
       styles:{font:'helvetica',fontSize:8.2,cellPadding:1.9,lineColor:[205,212,222],lineWidth:.1,textColor:[20,36,61],valign:'middle'},
       headStyles:{fillColor:[20,36,61],textColor:255,fontSize:8,fontStyle:'bold'},
       alternateRowStyles:{fillColor:[244,246,250]},
       columnStyles:{0:{cellWidth:9,halign:'right'},1:{cellWidth:56},2:{cellWidth:20},
         3:{cellWidth:29},4:{cellWidth:18,halign:'center'},
-        5:{cellWidth:50,font:'courier',fontSize:6.6,textColor:[47,95,168]}},
+        5:{cellWidth:38,font:'courier',fontStyle:'bold',fontSize:8.4,textColor:[47,95,168]}},
       didDrawCell:function(data){
         if(data.section!=='body')return;
         if(data.column.index===4){
@@ -945,7 +945,7 @@ $('#btnSend').addEventListener('click',async()=>{
   try{
     await api.confirmar();S.confirmado=true;render();
     const box=el('div');box.style.padding='18px 20px';
-    box.appendChild(el('p',null,'A coordenação central recebeu o agendamento das '+S.turmas.length+' turmas. Você ainda pode alterar horários até 18 de setembro.'));
+    box.appendChild(el('p',null,'A coordenação central recebeu o agendamento das '+S.turmas.length+' turmas. Você ainda pode alterar horários até 30 de setembro.'));
     const n=el('div','note info');
     n.innerHTML='<b>Próximo passo.</b> Baixe o manual do aplicador e as listas de presença em PDF. Os links individuais só devem ser entregues no dia da sessão.';
     box.appendChild(n);
